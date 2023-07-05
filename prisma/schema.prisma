@@ -1,0 +1,53 @@
+// Prisma schema file
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Pet {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  owner     AppUser  @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+}
+
+model AppUser {
+  id                Int       @id @default(autoincrement())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  name              String?
+  description       String?
+  image             String?
+  pets              Pet[]
+  userFriends       Friend[]  @relation(name: "users")
+  friendUserFriends Friend[]  @relation(name: "friend_users")
+  Comment           Comment[]
+}
+
+model Friend {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  friend_id Int
+  user      AppUser  @relation(name: "users", fields: [user_id], references: [id])
+  friend    AppUser  @relation(name: "friend_users", fields: [friend_id], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([user_id, friend_id])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  owner     AppUser  @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+  title     String
+  text      String
+}

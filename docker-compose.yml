@@ -1,0 +1,30 @@
+services:
+  api:
+    depends_on:
+      - postgres
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+    env_file:
+    - .env
+    command: npm run start:dev
+    ports:
+      - 3000:3000
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: petnetwork
+      POSTGRES_USER: petnetwork
+      POSTGRES_PASSWORD: petnetwork
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
