@@ -24,6 +24,7 @@ export class PetService {
     return pets.map((pet) => {
       return {
         name: pet.name,
+        image: pet.image,
       };
     });
   }
