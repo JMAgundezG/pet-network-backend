@@ -16,6 +16,7 @@ model Pet {
   name      String
   owner     AppUser  @relation(fields: [ownerId], references: [id])
   ownerId   Int
+  image     String?
 }
 
 model AppUser {
