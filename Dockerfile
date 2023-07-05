@@ -36,8 +36,8 @@ RUN npm run build
 
 ENV NODE_ENV production
 
-RUN npm ci --only=production && npm cache clean --force
 RUN npm install @prisma/client
+RUN npm ci --only=production && npm cache clean --force
 RUN npx prisma generate
 USER node
 
