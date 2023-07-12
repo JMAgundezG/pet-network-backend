@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { CreateUserDTO, UpdateUserDTO } from './dto';
-import { UserData, UsersListItem, UserListData} from './user.interface';
+import { UserData, UsersListItem, UserListData } from './user.interface';
 
 const select = {
   id: true,

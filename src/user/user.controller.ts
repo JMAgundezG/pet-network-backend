@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserData, UsersListItem, UserListData } from './user.interface';
+import { UserData, UserListData } from './user.interface';
 import { CreateUserDTO, UpdateUserDTO } from './dto';
 import { ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger/dist';
 

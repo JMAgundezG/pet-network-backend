@@ -9,5 +9,4 @@ export class CreatePetDTO {
 
   @IsNotEmpty()
   readonly ownerId: number;
-
 }

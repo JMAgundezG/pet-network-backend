@@ -90,7 +90,6 @@ export class CommentService {
   }
 
   async delete(id: number): Promise<Comment> {
-
     const comment = await this.prisma.comment.findUnique({
       where: {
         id,
@@ -100,7 +99,6 @@ export class CommentService {
     if (!comment) {
       throw new HttpException('Comment not found', 404);
     }
-    
 
     const deletedComment = await this.prisma.comment.delete({
       where: {

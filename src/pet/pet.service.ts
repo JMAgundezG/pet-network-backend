@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { UpdatePetDTO } from './dto/updatePet.dto';
 import { CreatePetDTO } from './dto';
-
+import { Pet } from './pet.interface';
 @Injectable()
 export class PetService {
   constructor(private prisma: PrismaService) {}
