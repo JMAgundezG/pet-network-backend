@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/services/prisma.service';
-import { CreateUserDto, UpdateUserDto } from './dto';
-import { UserData, UsersListItem } from './user.interface';
+import { CreateUserDTO, UpdateUserDTO } from './dto';
+import { UserData, UsersListItem, UserListData} from './user.interface';
 
 const select = {
   id: true,
@@ -20,7 +20,7 @@ const selectAllByName = {
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateUserDto): Promise<UserData> {
+  async create(dto: CreateUserDTO): Promise<UserData> {
     console.log(dto);
     const { name, description, image } = dto;
 
@@ -41,22 +41,33 @@ export class UserService {
     name: string,
     starts: number,
     orderBy: string,
-  ): Promise<UsersListItem[]> {
-    const users = await this.prisma.appUser.findMany({
+  ): Promise<UserListData> {
+    const users: UsersListItem[] = await this.prisma.appUser.findMany({
       where: {
         name: {
           contains: name,
         },
       },
       select: selectAllByName,
-      skip: starts,
+      skip: starts * 10,
       take: 10,
       orderBy: {
         [orderBy]: 'asc',
       },
     });
-
-    return users;
+    const totalPages = await this.prisma.appUser.count({
+      where: {
+        name: {
+          contains: name,
+        },
+      },
+    });
+    console.log('totalPages', totalPages);
+    return {
+      users,
+      currentPage: Math.ceil(starts + 1),
+      numberOfPages: Math.ceil(totalPages / 10),
+    };
   }
 
   async getById(id: number): Promise<UserData> {
@@ -74,7 +85,7 @@ export class UserService {
     return user;
   }
 
-  async update(name, dto: UpdateUserDto): Promise<UserData> {
+  async update(name, dto: UpdateUserDTO): Promise<UserData> {
     const { description, image } = dto;
 
     const user = await this.prisma.appUser.findFirst({
@@ -141,6 +152,12 @@ export class UserService {
     await this.prisma.appUser.delete({
       where: {
         id: user.id,
+      },
+    });
+
+    await this.prisma.comment.deleteMany({
+      where: {
+        ownerId: user.id,
       },
     });
 

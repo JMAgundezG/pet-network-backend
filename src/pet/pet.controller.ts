@@ -14,4 +14,8 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('pets')
 export class PetController {
   constructor(private readonly petService: PetService) {}
+  @Get(':id')
+  async getPetsFromUser(@Param('id') id: string) {
+    return await this.petService.getAllFromUser(parseInt(id));
+  }
 }

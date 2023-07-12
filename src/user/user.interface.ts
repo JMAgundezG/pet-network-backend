@@ -9,3 +9,9 @@ export interface UserData {
   description: string;
   image?: string;
 }
+
+export interface UserListData {
+  users: UsersListItem[];
+  currentPage: number;
+  numberOfPages: number;
+}

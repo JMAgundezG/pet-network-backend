@@ -1,8 +1,9 @@
 import { IsNotEmpty, IsUrl } from 'class-validator';
 
-export class CreateUserDto {
+export class CreateUserDTO {
   @IsNotEmpty()
   readonly name: string;
+  
   @IsNotEmpty()
   readonly description: string;
 

@@ -9,8 +9,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserData, UsersListItem } from './user.interface';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { UserData, UsersListItem, UserListData } from './user.interface';
+import { CreateUserDTO, UpdateUserDTO } from './dto';
 import { ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger/dist';
 
 @ApiTags('user')
@@ -41,9 +41,9 @@ export class UserController {
     @Query('q') q: string,
     @Query('page') page: number,
     @Query('orderBy') orderBy: string,
-  ): Promise<UsersListItem[]> {
+  ): Promise<UserListData> {
     const name = q || '';
-    const pagination = page || 0;
+    const pagination = page - 1 || 0;
     const order = orderBy == 'name' ? 'name' : 'id';
     console.log('name', name, 'pagination', pagination);
     const returned = await this.userService.getAllByName(
@@ -51,13 +51,12 @@ export class UserController {
       pagination,
       order,
     );
-    console.log('returned', returned);
     return returned;
   }
 
   @Post('users')
-  @ApiBody({ type: CreateUserDto })
-  async create(@Body() userData: CreateUserDto) {
+  @ApiBody({ type: CreateUserDTO })
+  async create(@Body() userData: CreateUserDTO) {
     return await this.userService.create(userData);
   }
 
@@ -67,10 +66,10 @@ export class UserController {
   }
 
   @Put('user/:id')
-  @ApiBody({ type: UpdateUserDto })
+  @ApiBody({ type: UpdateUserDTO })
   async update(
     @Param('id') id: string,
-    @Body() userData: UpdateUserDto,
+    @Body() userData: UpdateUserDTO,
   ): Promise<UserData> {
     return await this.userService.update(id, userData);
   }
